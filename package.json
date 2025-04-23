@@ -1,19 +1,57 @@
 {
-  "name": "qidian-vp",
+  "name": "web-source-grabber",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Web Source Grabber - A tool for downloading source code from websites",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "web-source-grabber": "dist/index.js",
+    "wsg": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "node --loader ts-node/esm src/index.ts",
+    "watch": "tsc -w",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "source-map",
+    "source-code",
+    "web",
+    "crawler",
+    "javascript",
+    "css"
+  ],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "axios": "^1.8.4",
     "cheerio": "^1.0.0",
+    "commander": "^13.1.0",
     "fs-extra": "^11.3.0",
+    "p-limit": "^6.2.0",
+    "p-retry": "^6.2.1",
     "source-map": "^0.7.4",
     "url-parse": "^1.5.10"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/cheerio": "^0.22.35",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.14.1",
+    "@types/source-map": "^0.5.2",
+    "@types/url-parse": "^1.4.11",
+    "rimraf": "^5.0.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
