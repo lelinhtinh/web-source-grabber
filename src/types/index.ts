@@ -45,7 +45,16 @@ export interface AxiosRequestConfig {
   headers?: Record<string, string>;
   responseType?: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream';
   timeout?: number;
-  [key: string]: any;
+  params?: Record<string, string | number | boolean | null | undefined>;
+  data?: unknown;
+  withCredentials?: boolean;
+  auth?: {
+    username: string;
+    password: string;
+  };
+  validateStatus?: (status: number) => boolean;
+  maxRedirects?: number;
+  [key: string]: unknown;
 }
 
 export interface Asset {

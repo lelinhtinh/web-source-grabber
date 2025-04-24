@@ -104,7 +104,8 @@ export class SourceMapService {
 
       // Process source files in the source map
       await this.extractSourcesFromMap(mapResult.data, srcDir);
-    } catch (error) {
+    } catch {
+      // Silence the error, just log that source map wasn't found
       console.log(`Source map not found for ${assetUrl}`);
     }
   }

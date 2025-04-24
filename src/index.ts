@@ -10,6 +10,7 @@ import { FetchService } from './services/fetchService.js';
 import { CacheService } from './services/cacheService.js';
 import { SourceMapService } from './services/sourceMapService.js';
 import { HtmlService } from './services/htmlService.js';
+import { AppConfig } from './types/index.js';
 
 // Get current path to read package.json
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +20,7 @@ const __dirname = dirname(__filename);
  * Display banner and configuration information
  * @param config Application configuration
  */
-function displayBanner(config: any) {
+function displayBanner(config: AppConfig) {
   // Read version information from package.json
   const packageInfo = JSON.parse(
     fs.readFileSync(path.join(dirname(__dirname), 'package.json'), 'utf8')
