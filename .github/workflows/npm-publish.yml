@@ -48,8 +48,8 @@ jobs:
 
           echo "Package: $PKG_NAME@$PKG_VERSION"
 
-          npm view "$PKG_NAME@$PKG_VERSION" version > /dev/null 2>&1
-          if [ $? -eq 0 ]; then
+          # Use npm view with --json flag for more reliable parsing
+          if npm view "$PKG_NAME@$PKG_VERSION" --json > /dev/null 2>&1; then
             echo "Version $PKG_VERSION already exists. Bumping patch version..."
             npm version patch --no-git-tag-version
             NEW_VERSION=$(node -p "require('./package.json').version")
