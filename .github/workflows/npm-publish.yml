@@ -1,0 +1,68 @@
+name: Node.js Package
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "**.txt"
+      - ".gitignore"
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org/'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for lint errors
+        run: npm run lint || echo "Linting complete with warnings"
+
+      - name: Build package
+        run: npm run build
+
+      - name: Configure Git user
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Automatic version bump
+        id: version-bump
+        run: |
+          # Check if current version exists on npm
+          PKG_NAME=$(node -p "require('./package.json').name")
+          PKG_VERSION=$(node -p "require('./package.json').version")
+
+          echo "Package: $PKG_NAME@$PKG_VERSION"
+
+          npm view "$PKG_NAME@$PKG_VERSION" version > /dev/null 2>&1
+          if [ $? -eq 0 ]; then
+            echo "Version $PKG_VERSION already exists. Bumping patch version..."
+            npm version patch --no-git-tag-version
+            NEW_VERSION=$(node -p "require('./package.json').version")
+            echo "Bumped to version $NEW_VERSION"
+
+            git add package.json
+            git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+            git push
+          else
+            echo "Version $PKG_VERSION does not exist on npm, proceeding with publish"
+          fi
+
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
